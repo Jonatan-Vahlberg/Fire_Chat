@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Fire Chat</string>
+    <string name="email_hint">Email</string>
+    <string name="nick_hint">Nickname</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="or">Or...</string>
+</resources>
