@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginVertical="10dp"
+    android:layout_marginHorizontal="20dp">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/message_left_view"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/message_nick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:text="marcus"
+            android:layout_toEndOf="@+id/message_left_view"
+            android:layout_toStartOf="@+id/message_right_view"
+            android:layout_marginBottom="5dp"/>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="20dp"
+            android:layout_below="@+id/message_nick"
+            android:layout_toEndOf="@+id/message_left_view"
+            android:layout_toStartOf="@+id/message_right_view">
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:padding="10dp">
+                <TextView
+                    android:id="@+id/message_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sample_long"
+                    android:textSize="18dp"
+                    android:textColor="#000"
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:id="@+id/message_time_stamp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="2019/03/18 23:59"/>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <View
+            android:id="@+id/message_right_view"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+</LinearLayout>

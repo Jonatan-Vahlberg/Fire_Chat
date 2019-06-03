@@ -6,15 +6,30 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_list"
     tools:context=".MainActivity"
-    android:id="@+id/home_background">
+    android:id="@+id/home_background"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.25">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="65sp"
+            android:text="FIRE CHAT"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+    <FrameLayout
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.75"
+        android:id="@+id/fragment_holder">
+
+    </FrameLayout>
+
 
 </LinearLayout>
