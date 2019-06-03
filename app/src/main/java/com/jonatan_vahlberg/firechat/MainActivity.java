@@ -29,9 +29,6 @@ public class MainActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Map<String,Object> user = new HashMap<>();
-        user.put("email","admin@altor.mail");
-        user.put("chats", new ArrayList<Long>());
 
         AnimationDrawable animationDrawable = (AnimationDrawable) findViewById(R.id.home_background).getBackground();
         animationDrawable.setEnterFadeDuration(2000);
@@ -54,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
                 FirebaseHelper.autoAuthenticateUser(email,password);
                 fragmentTransaction.replace(R.id.fragment_holder, new MainFragment());
+                FirebaseHelper.getUserCoupledDataFromFirestore(User.current.UID);
             }
             else{
                 fragmentTransaction.add(R.id.fragment_holder,new LoginFragment());

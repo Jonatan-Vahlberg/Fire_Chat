@@ -1,5 +1,7 @@
 package com.jonatan_vahlberg.firechat.helper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
@@ -59,5 +61,14 @@ public class KeyHelper {
         return decryptedKey;
 
 
+    }
+
+    public static void destroyKeys(SharedPreferences sharedPreferences,String[] keys){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        for(String key : keys){
+            editor.remove(key);
+        }
+        editor.apply();
     }
 }

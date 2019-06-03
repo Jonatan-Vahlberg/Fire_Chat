@@ -6,14 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ChatActivity"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:focusableInTouchMode="true">
+
+    <include layout="@layout/chat_nav"
+            android:id="@+id/chat_nav"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chat-recycle_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_margin="10dp"
+
         />
 
     <LinearLayout
@@ -38,6 +42,7 @@
             android:layout_gravity="center"
             android:imeOptions="actionDone"/>
         <Button
+            android:id="@+id/chat_send_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

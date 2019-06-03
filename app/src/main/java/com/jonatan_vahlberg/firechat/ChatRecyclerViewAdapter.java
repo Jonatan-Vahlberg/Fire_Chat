@@ -7,18 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
-    private static String previousUID = "";
     private Context context;
     private ArrayList<Message> messages;
 
     public ChatRecyclerViewAdapter(Context context, ArrayList<Message> messages) {
-        previousUID = "";
         this.context = context;
         this.messages = messages;
     }
@@ -44,11 +40,8 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
             viewHolder.itemView.findViewById(R.id.message_left_view).setVisibility(View.GONE);
             viewHolder.itemView.findViewById(R.id.message_right_view).setVisibility(View.VISIBLE);
         }
-        //viewHolder.messageSender.setText((message.getUID().equals(User.current.UID))?"":message.getNick());
-        //viewHolder.messageSender.setText(((message.getUID().equals(previousUID)? "":message.getNick())));
         viewHolder.message.setText(message.getMessage());
         viewHolder.timeStamp.setText(message.getStamp());
-        previousUID = message.getUID();
     }
 
     @Override

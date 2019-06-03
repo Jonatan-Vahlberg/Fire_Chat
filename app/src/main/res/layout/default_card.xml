@@ -14,7 +14,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:src="@drawable/common_google_signin_btn_icon_dark"/>
+            android:src="@drawable/speech"/>
         <TextView
             android:id="@+id/default_card_text"
             android:layout_width="match_parent"

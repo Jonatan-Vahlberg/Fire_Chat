@@ -93,6 +93,7 @@ public class FirebaseHelper {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            User.current.UID = FirebaseAuth.getInstance().getUid();
                         }
                     }
                 });

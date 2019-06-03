@@ -16,34 +16,72 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 public class ChatsActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    CollectionReference userChats;
 
     private Dialog createDialog;
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
+    Button searchBtn;
+    EditText searchText;
     FloatingActionButton createDialogBtn;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        userChats = db.collection("users").document(User.current.UID).collection("chats");
+        userChats.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    //TODO
+                }
+                else{
+                    User.current.chats.clear();
+                    for(QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots){
+                        Chat chat = queryDocumentSnapshot.toObject(Chat.class);
+                        chat.setId(queryDocumentSnapshot.getId());
+                        User.current.chats.add(chat);
+                    }
+                    ChatsActivity.this.recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppThemeNormal);
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chats);
         setupRecyclerView();
 
         createDialogBtn = findViewById(R.id.chats_create_dialog_btn);
         createDialogBtn.setOnClickListener(this);
+        searchText = findViewById(R.id.chats_find_text);
+
+        searchBtn = findViewById(R.id.chats_find_btn);
+        searchBtn.setOnClickListener(this);
     }
 
     private void setupRecyclerView(){
@@ -58,7 +96,39 @@ public class ChatsActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.chats_create_dialog_btn:
                 renderCreateFragment(this);
+                break;
+            case R.id.chats_find_btn:
+                searchForChat();
+                break;
         }
+    }
+
+    private void searchForChat() {
+        db.collection("Chats").whereEqualTo("chat_id",searchText.getText().toString())
+        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if(e != null){
+                    Toast.makeText(ChatsActivity.this,"Cant find chat based on that id",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    if(queryDocumentSnapshots.size() < 1) Toast.makeText(ChatsActivity.this,"Cant find chat based on that id",Toast.LENGTH_SHORT).show();
+                    for(QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots){
+                        final String docRefId = queryDocumentSnapshot.getId();
+                        Map<String,Object> map = queryDocumentSnapshot.getData();
+
+                        final HashMap<String,Object> mapForUsers = new HashMap<>();
+                        mapForUsers.put("chat_id",map.get("chat_id"));
+                        mapForUsers.put("chat_name",map.get("chat_name"));
+
+
+                        db.collection("users").document(User.current.UID).collection("chats").document(docRefId).set(mapForUsers);
+                        User.current.updateChats(ChatsActivity.this);
+                    }
+                }
+
+            }
+        });
     }
 
     private void renderCreateFragment(final Context context) {

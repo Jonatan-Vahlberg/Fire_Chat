@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -41,7 +43,7 @@ public class ChatActivity extends AppCompatActivity  {
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     ArrayList<Message> messages = new ArrayList<>();
-
+    View nav;
     EditText messageEdit;
 
     Button sendBtn;
@@ -52,15 +54,15 @@ public class ChatActivity extends AppCompatActivity  {
     @Override
     protected void onStart() {
         super.onStart();
-        //loadMessages();
-
+        //Listener for Firebase snapshots
+        /*Runs Once and then every time a message is entered into database*/
         chatRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 //messages = new ArrayList<>();
                 messages.clear();
                 if(e != null){
-                    //TODO error
+                    Toast.makeText(ChatActivity.this,"Unable to connect With Servers at the moment",Toast.LENGTH_SHORT);
                 }
                 else{
 
@@ -77,15 +79,6 @@ public class ChatActivity extends AppCompatActivity  {
 
     }
 
-    private void orderArrayOnIndex() {
-        Collections.sort(messages, new Comparator<Message>() {
-            @Override
-            public int compare(Message o1, Message o2) {
-                return Integer.valueOf(o1.getIndex()).compareTo(o2.getIndex());
-            }
-        });
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppThemeNormal);
@@ -93,14 +86,22 @@ public class ChatActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_chat);
         setupRecyclerView();
 
+        //check Intent
         if(getIntent().hasExtra("CHAT_ID")){
             chatPublicId = "#" + getIntent().getStringExtra("CHAT_PUBLIC_ID");
             chatId = getIntent().getStringExtra("CHAT_ID");
             chatName = getIntent().getStringExtra("CHAT_NAME");
+
+            nav = findViewById(R.id.chat_nav);
+            ((TextView)nav.findViewById(R.id.chat_nav_text)).setText(chatName);
         }
         chatRef = db.collection("Chats/"+chatId+"/messages");
         setupLayout();
+
+
     }
+
+
 
     private  void setupLayout(){
         messageEdit = findViewById(R.id.chat_message_edit);
@@ -114,6 +115,15 @@ public class ChatActivity extends AppCompatActivity  {
                 return true;
             }
         });
+
+        sendBtn = findViewById(R.id.chat_send_btn);
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(messageEdit.getText().toString().equals("")) return;
+                createAndUploadMessage(messageEdit.getText().toString());
+            }
+        });
     }
 
     private void setupRecyclerView(){
@@ -123,18 +133,6 @@ public class ChatActivity extends AppCompatActivity  {
         LinearLayoutManager l = new LinearLayoutManager(this);
         l.setStackFromEnd(true);
         recyclerView.setLayoutManager(l);
-    }
-
-    private void loadMessages() {
-        chatRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
-                    Message message = documentSnapshot.toObject(Message.class);
-                    messages.add(message);
-                }
-            }
-        });
     }
 
     private void createAndUploadMessage(String message){
@@ -164,6 +162,15 @@ public class ChatActivity extends AppCompatActivity  {
 
         dateString = date + " " + time;
         return  dateString;
+    }
+
+    private void orderArrayOnIndex() {
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                return Integer.valueOf(o1.getIndex()).compareTo(o2.getIndex());
+            }
+        });
     }
 
 

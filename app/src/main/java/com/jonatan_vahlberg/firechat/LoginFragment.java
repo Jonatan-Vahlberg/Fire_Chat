@@ -78,7 +78,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         showLoading();
         email = emailField.getText().toString();
         password = passwordField.getText().toString();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if(email.equals("") || password.equals("")){
+            bar.setVisibility(View.GONE);
+            return;
+        }
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -87,6 +91,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         if(task.isSuccessful()){
                             bar.setVisibility(View.GONE);
                             addCredentials(password,email);
+                            User.current.UID = auth.getUid();
+                            FirebaseHelper.getUserCoupledDataFromFirestore(User.current.UID);
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
                             transaction.replace(R.id.fragment_holder,new MainFragment());
                             transaction.commit();
