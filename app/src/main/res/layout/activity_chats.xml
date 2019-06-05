@@ -52,6 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="16dp"
+            android:src="@drawable/add_circle_large"
+            android:adjustViewBounds="true"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"/>
     </RelativeLayout>

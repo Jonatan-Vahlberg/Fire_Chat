@@ -149,7 +149,7 @@ public class ChatsActivity extends AppCompatActivity implements View.OnClickList
                 if(chatName.getText().toString().length() > 0){
                     final Map<String,Object> chatMap = new HashMap<>();
                     chatMap.put("chat_name",chatName.getText().toString());
-                    chatMap.put("chat_id",id);
+                    chatMap.put("chat_id",Integer.toString(id));
                     db.collection("Chats").add(chatMap)
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
